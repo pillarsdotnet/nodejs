@@ -1,0 +1,56 @@
+Description: add acorn, walk to shared builtins
+Last-Update: 2022-09-28
+Forwarded: https://github.com/nodejs/node/pull/44376
+Author: Jérémy Lal <kapouer@melix.org>
+
+--- a/configure.py
++++ b/configure.py
+@@ -59,6 +59,9 @@
+ 
+ # builtins may be removed later if they have been disabled by options
+ shareable_builtins = {'undici/undici': 'deps/undici/undici.js',
++                     'acorn': 'deps/acorn/acorn/dist/acorn.js',
++                     'acorn_walk': 'deps/acorn/acorn-walk/dist/walk.js',
++                     'minimatch': 'deps/minimatch/index.js',
+                      'amaro/dist/index': 'deps/amaro/dist/index.js'
+ }
+ 
+--- a/src/node_builtins.cc
++++ b/src/node_builtins.cc
+@@ -52,6 +52,24 @@
+                          STRINGIFY(NODE_SHARED_BUILTIN_UNDICI_UNDICI_PATH));
+ #endif  // NODE_SHARED_BUILTIN_UNDICI_UNDICI_PATH
+ 
++#ifdef NODE_SHARED_BUILTIN_ACORN_PATH
++  AddExternalizedBuiltin(
++    "internal/deps/acorn/acorn/dist/acorn",
++    STRINGIFY(NODE_SHARED_BUILTIN_ACORN_PATH));
++#endif  // NODE_SHARED_BUILTIN_ACORN_PATH
++
++#ifdef NODE_SHARED_BUILTIN_ACORN_WALK_PATH
++  AddExternalizedBuiltin(
++    "internal/deps/acorn/acorn-walk/dist/walk",
++    STRINGIFY(NODE_SHARED_BUILTIN_ACORN_WALK_PATH));
++#endif  // NODE_SHARED_BUILTIN_ACORN_WALK_PATH
++
++#ifdef NODE_SHARED_BUILTIN_MINIMATCH_PATH
++  AddExternalizedBuiltin(
++    "internal/deps/minimatch/index",
++    STRINGIFY(NODE_SHARED_BUILTIN_MINIMATCH_PATH));
++#endif  // NODE_SHARED_BUILTIN_MINIMATCH_PATH
++
+ #if HAVE_AMARO
+ #ifdef NODE_SHARED_BUILTIN_AMARO_DIST_INDEX_PATH
+   AddExternalizedBuiltin("internal/deps/amaro/dist/index",
+--- a/node.gyp
++++ b/node.gyp
+@@ -65,9 +65,6 @@
+       'deps/v8/tools/tickprocessor.mjs',
+       'deps/v8/tools/sourcemap.mjs',
+       'deps/v8/tools/tickprocessor-driver.mjs',
+-      'deps/acorn/acorn/dist/acorn.js',
+-      'deps/acorn/acorn-walk/dist/walk.js',
+-      'deps/minimatch/index.js',
+       '<@(node_builtin_shareable_builtins)',
+     ],
+     'node_sources': [

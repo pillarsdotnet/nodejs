@@ -1,0 +1,16 @@
+Description: For some reason, make install rebuilds all. Disable it.
+Author: Jérémy Lal <kapouer@melix.org>
+Last-Update: 2026-02-19
+Forwarded: not-needed
+
+--- a/Makefile
++++ b/Makefile
+@@ -196,7 +196,7 @@
+ 	fi
+ 
+ .PHONY: install
+-install: all ## Install node into $PREFIX (default=/usr/local).
++install: ## Install node into $PREFIX (default=/usr/local).
+ 	$(PYTHON) tools/install.py $@ --dest-dir '$(DESTDIR)' --prefix '$(PREFIX)'
+ 
+ .PHONY: uninstall

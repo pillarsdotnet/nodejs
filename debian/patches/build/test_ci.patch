@@ -1,0 +1,115 @@
+Description: adapt tools/test.py
+ * log to stdout
+ * increase timeout multipliers
+ * rename --flaky-tests to --flaky-tests-mode and use --flaky-tests like --skip-tests 
+Author: Jérémy Lal <kapouer@melix.org>
+Forwarded: not-needed
+Reviewed-By: Xavier Guimard <yadd@debian.org>
+Last-Update: 2025-02-12
+
+--- a/Makefile
++++ b/Makefile
+@@ -586,7 +586,7 @@
+ test-ci-native: LOGLEVEL := info ## Build and test addons without building anything else.
+ test-ci-native: | benchmark/napi/.buildstamp test/addons/.buildstamp test/js-native-api/.buildstamp test/node-api/.buildstamp test/sqlite/.buildstamp
+ 	$(PYTHON) tools/test.py $(PARALLEL_ARGS) -p tap --logfile test.tap \
+-		--mode=$(BUILDTYPE_LOWER) --flaky-tests=$(FLAKY_TESTS) \
++		--mode=$(BUILDTYPE_LOWER) --flaky-tests-mode=$(FLAKY_TESTS) \
+ 		$(TEST_CI_ARGS) $(CI_NATIVE_SUITES)
+ 
+ .PHONY: test-ci-js
+@@ -594,7 +594,7 @@
+ # Related CI job: node-test-commit-arm-fanned
+ test-ci-js: | clear-stalled ## Build and test JavaScript with building anything else.
+ 	$(PYTHON) tools/test.py $(PARALLEL_ARGS) -p tap --logfile test.tap \
+-		--mode=$(BUILDTYPE_LOWER) --flaky-tests=$(FLAKY_TESTS) \
++		--mode=$(BUILDTYPE_LOWER) --flaky-tests-mode=$(FLAKY_TESTS) \
+ 		--skip-tests=$(CI_SKIP_TESTS) \
+ 		$(TEST_CI_ARGS) $(CI_JS_SUITES)
+ 	$(info Clean up any leftover processes, error if found.)
+@@ -610,7 +610,7 @@
+ test-ci: | clear-stalled bench-addons-build build-addons build-js-native-api-tests build-node-api-tests build-sqlite-tests doc-only
+ 	out/Release/cctest --gtest_output=xml:out/junit/cctest.xml
+ 	$(PYTHON) tools/test.py $(PARALLEL_ARGS) -p tap --logfile test.tap \
+-		--mode=$(BUILDTYPE_LOWER) --flaky-tests=$(FLAKY_TESTS) \
++		--mode=$(BUILDTYPE_LOWER) --flaky-tests-mode=$(FLAKY_TESTS) \
+ 		$(TEST_CI_ARGS) $(CI_JS_SUITES) $(CI_NATIVE_SUITES) $(CI_DOC)
+ 	$(info Clean up any leftover processes, error if found.)
+ 	ps awwx | grep Release/node | grep -v grep | cat
+--- a/tools/test.py
++++ b/tools/test.py
+@@ -1417,7 +1417,7 @@
+       default=False, action="store_true")
+   result.add_argument("--cat", help="Print the source of the tests",
+       default=False, action="store_true")
+-  result.add_argument("--flaky-tests",
++  result.add_argument("--flaky-tests-mode",
+       help="Regard tests marked as flaky (run|skip|dontcare|keep_retrying)",
+       default="run")
+   result.add_argument("--measure-flakiness",
+@@ -1426,6 +1426,9 @@
+   result.add_argument("--skip-tests",
+       help="Tests that should not be executed (comma-separated)",
+       default="")
++  result.add_argument("--flaky-tests",
++      help="Tests that are flaky (comma-separated)",
++      default="")
+   result.add_argument("--warn-unused", help="Report unused rules",
+       default=False, action="store_true")
+   result.add_argument("-j", help="The number of parallel tasks to run, 0=use number of cores",
+@@ -1475,6 +1478,7 @@
+   options.run = options.run.split(',')
+   # Split at commas and filter out all the empty strings.
+   options.skip_tests = [test for test in options.skip_tests.split(',') if test]
++  options.flaky_tests = [test for test in options.flaky_tests.split(',') if test]
+   if options.run == [""]:
+     options.run = None
+   elif len(options.run) != 2:
+@@ -1502,8 +1506,8 @@
+     # -j and ignoring -J, which is the opposite of what we used to do before -J
+     # became a legacy no-op.
+     print('Warning: Legacy -J option is ignored. Using the -j option.')
+-  if options.flaky_tests not in [RUN, SKIP, DONTCARE, KEEP_RETRYING]:
+-    print("Unknown flaky-tests mode %s" % options.flaky_tests)
++  if options.flaky_tests_mode not in [RUN, SKIP, DONTCARE, KEEP_RETRYING]:
++    print("Unknown tests mode %s" % options.flaky_tests_mode)
+     return False
+   return True
+ 
+@@ -1796,11 +1800,13 @@
+         sys.exit(1)
+ 
+   def should_keep(case):
++    if any((s in case.file) for s in options.flaky_tests):
++      case.outcomes.add(FLAKY)
+     if any((s in case.file) for s in options.skip_tests):
+       return False
+     elif SKIP in case.outcomes:
+       return False
+-    elif (options.flaky_tests == SKIP) and (set([SLOW, FLAKY]) & case.outcomes):
++    elif (options.flaky_tests_mode == SKIP) and (set([SLOW, FLAKY]) & case.outcomes):
+       return False
+     else:
+       return True
+@@ -1833,7 +1839,7 @@
+   else:
+     try:
+       start = time.time()
+-      result = RunTestCases(cases_to_run, options.progress, options.j, options.flaky_tests, options.measure_flakiness)
++      result = RunTestCases(cases_to_run, options.progress, options.j, options.flaky_tests_mode, options.measure_flakiness)
+       exitcode = 0 if result['allPassed'] else 1
+       duration = time.time() - start
+     except KeyboardInterrupt:
+--- a/test/common/index.js
++++ b/test/common/index.js
+@@ -288,6 +288,10 @@
+   const multipliers = typeof ms === 'bigint' ?
+     { two: 2n, four: 4n, seven: 7n } : { two: 2, four: 4, seven: 7 };
+ 
++  if (process.env.TEST_CI_TIMEOUT_MULTIPLIER) {
++    ms = typeof ms == "bigint" ? BigInt(process.env.TEST_CI_TIMEOUT_MULTIPLIER) * ms : parseInt(process.env.TEST_CI_TIMEOUT_MULTIPLIER) * ms;
++  }
++
+   if (isDebug)
+     ms = multipliers.two * ms;
+ 

@@ -1,0 +1,1 @@
+../../tools/doc/type-parser.mjs

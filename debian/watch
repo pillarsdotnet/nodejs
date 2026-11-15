@@ -1,0 +1,21 @@
+Version: 5
+
+Source: https://nodejs.org/dist
+Matching-Pattern: v(24\.\d+\.\d+)/
+Downloadurlmangle: s/.*v(.*)\//https\:\/\/nodejs\.org\/dist\/v$1\/node\-v$1\.tar\.xz/
+Dversionmangle: auto
+Filenamemangle: s/.*v(.*)\/$/nodejs-$1\.tar\.xz/
+Repacksuffix: +dfsg
+Version-Schema: group
+
+# IMPORTANT: do NOT upgrade @types/node when target is debian/stable,
+# it will break some debian packages, and some users packages too.
+# It is not recommended use npmregistry. Please investigate more.
+# Take a look at https://wiki.debian.org/debian/watch/
+Component: types-node
+Template: Npmregistry
+Ctype: nodejs
+Dist: @types/node
+Matching-Pattern: https://registry.npmjs.org/@types/node/-/node-(24\.\d+\.\d+)@ARCHIVE_EXT@
+Version-Schema: checksum
+

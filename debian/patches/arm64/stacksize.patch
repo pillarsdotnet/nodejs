@@ -1,0 +1,36 @@
+Description: Harmonize V8 stack sizes on ARM architectures to match almost all other architectures
+Author: James Addison <jay@jp-hosting.net>
+Last-Update: 2023-02-28
+Forwarded: https://github.com/nodejs/node/issues/41163
+--- a/deps/v8/src/common/globals.h
++++ b/deps/v8/src/common/globals.h
+@@ -167,29 +167,9 @@
+ #define ENABLE_CONTROL_FLOW_INTEGRITY_BOOL false
+ #endif
+ 
+-#if V8_TARGET_ARCH_ARM
+-// Set stack limit lower for ARM than for other architectures because stack
+-// allocating MacroAssembler takes 120K bytes.  See issue crbug.com/405338
+-#define V8_DEFAULT_STACK_SIZE_KB 864
+-#elif V8_TARGET_ARCH_IA32
+-// In mid-2022, we're observing an increase in stack overflow crashes on
+-// 32-bit Windows; the suspicion is that some third-party software suddenly
+-// started to consume a lot more stack memory (before V8 is even initialized).
+-// So we speculatively lower the ia32 limit to the ARM limit for the time
+-// being. See crbug.com/1346791.
+-#define V8_DEFAULT_STACK_SIZE_KB 864
+-#elif V8_USE_ADDRESS_SANITIZER
+-// ASan makes C++ frames consume more stack, so V8 should leave more stack
+-// space available in case a C++ call happens. ClusterFuzz found a case where
+-// even just 1 KB less than the default stack size would be enough (see
+-// crbug.com/1486275); to be more robust towards future CF reports we'll
+-// use an even lower limit.
+-#define V8_DEFAULT_STACK_SIZE_KB 960
+-#else
+ // Slightly less than 1MB, since Windows' default stack size for
+ // the main execution thread is 1MB.
+ #define V8_DEFAULT_STACK_SIZE_KB 984
+-#endif
+ 
+ // Helper macros to enable handling of direct C calls in the simulator.
+ #if defined(USE_SIMULATOR) &&                                           \

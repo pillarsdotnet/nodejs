@@ -1,0 +1,18 @@
+Description: Fix test-snapshot-typescript to work with tsc 6
+Author: Jérémy Lal <kapouer@melix.org>
+Last-Update: 2026-05-19
+Forwarded: https://github.com/nodejs/node/issues/63427
+--- a/test/fixtures/snapshot/typescript-main.js
++++ b/test/fixtures/snapshot/typescript-main.js
+@@ -20,7 +20,10 @@
+     source,
+     {
+       compilerOptions: {
+-        module: ts.ModuleKind.CommonJS
++        module: ts.ModuleKind.CommonJS,
++        strict: false,
++        alwaysStrict: false,
++        target: 'es5'
+       }
+     });
+ 

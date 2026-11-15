@@ -1,0 +1,2 @@
+Test-Command: ./debian/rules override_dh_auto_test-arch
+Depends: @, ca-certificates, python3, procps, curl, build-essential, node-typescript

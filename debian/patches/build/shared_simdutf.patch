@@ -1,0 +1,62 @@
+Description: Let v8 link against shared system simdutf
+Author: Jérémy Lal <kapouer@melix.org>
+Forwarded: https://github.com/nodejs/node/issues/60984
+Last-Update: 2026-08-04
+
+--- a/tools/v8_gypfiles/v8.gyp
++++ b/tools/v8_gypfiles/v8.gyp
+@@ -2420,16 +2420,17 @@
+     },  # highway
+     {
+       'target_name': 'simdutf',
+-      'type': 'static_library',
++      'type': 'shared_library',
+       'toolsets': ['host', 'target'],
++      'link_settings': {
++        'libraries': ['-lsimdutf', ],
++      },
+       'direct_dependent_settings': {
+         'include_dirs': [
+-          '<(V8_ROOT)/third_party/simdutf',
+         ],
+       },
+-      'include_dirs': ['.'],
++      'include_dirs': ['/usr/include'],
+       'sources': [
+-        '<(V8_ROOT)/third_party/simdutf/simdutf.cpp',
+       ],
+     },  # simdutf
+   ],
+--- a/deps/v8/src/objects/string.h
++++ b/deps/v8/src/objects/string.h
+@@ -21,7 +21,7 @@
+ #include "src/objects/tagged.h"
+ #include "src/sandbox/external-pointer.h"
+ #include "src/strings/unicode-decoder.h"
+-#include "third_party/simdutf/simdutf.h"
++#include <simdutf.h>
+ 
+ // Has to be the last include (doesn't have include guards):
+ #include "src/objects/object-macros.h"
+--- a/deps/v8/src/builtins/builtins-typed-array.cc
++++ b/deps/v8/src/builtins/builtins-typed-array.cc
+@@ -12,7 +12,7 @@
+ #include "src/objects/js-array-buffer-inl.h"
+ #include "src/objects/objects-inl.h"
+ #include "src/objects/simd.h"
+-#include "third_party/simdutf/simdutf.h"
++#include <simdutf.h>
+ 
+ namespace v8 {
+ namespace internal {
+--- a/deps/v8/src/strings/unicode-inl.h
++++ b/deps/v8/src/strings/unicode-inl.h
+@@ -10,7 +10,7 @@
+ 
+ #include "src/base/logging.h"
+ #include "src/utils/utils.h"
+-#include "third_party/simdutf/simdutf.h"
++#include <simdutf.h>
+ 
+ namespace unibrow {
+ 

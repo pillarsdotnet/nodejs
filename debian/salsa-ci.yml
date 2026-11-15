@@ -1,0 +1,14 @@
+---
+
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+build:
+  extends: .build-package
+  timeout: 5h
+
+variables:
+  # Save some space to avoid artifacts being too big to upload
+  # Do not check during build: ci runs autopkgtests just after
+  DEB_BUILD_OPTIONS: "nocheck noautodbgsym"
+

@@ -1,0 +1,199 @@
+Source: nodejs
+Section: javascript
+Maintainer: Debian Javascript Maintainers <pkg-javascript-devel@alioth-lists.debian.net>
+Uploaders: Jérémy Lal <kapouer@melix.org>,
+ Jonas Smedegaard <dr@jones.dk>
+Build-Depends:
+ gcc-14 [riscv64], g++-14 [riscv64],
+ sse2-support [i386] <!nocheck>,
+ armv6k-support [armel] <!nocheck>, vfpv2-support [armel] <!nocheck>,
+ debhelper-compat (= 13),
+ bash-completion,
+ dh-sequence-bash-completion,
+ ca-certificates,
+ curl <!nocheck>,
+ esbuild,
+ gyp (>= 0.16.0~),
+ jq,
+ libada-url-dev,
+ libada-url-dev:native,
+ libbrotli-dev,
+ libbrotli-dev:native,
+ libc-ares-dev (>= 1.18.1~),
+ libc-ares-dev:native,
+ libexpected-dev,
+ libfrozen-dev,
+ libfrozen-dev:native,
+ libgtest-dev,
+ libgtest-dev:native,
+ libhdr-histogram-dev,
+ libhdr-histogram-dev:native,
+ libicu-dev (>= 73.1~),
+ libicu-dev:native,
+ libllhttp-dev (>= 9.3.0~),
+ libllhttp-dev:native,
+ libnghttp2-dev (>= 1.41.0~),
+ libnghttp2-dev:native,
+ libnghttp3-dev (>= 1.4.0~),
+ libnghttp3-dev:native,
+ libngtcp2-dev (>= 1.6.0~),
+ libngtcp2-dev:native,
+ libsimdjson-dev (>= 3.13.0~),
+ libsimdjson-dev:native,
+ libspdlog-dev,
+ libspdlog-dev:native,
+ libsqlite3-dev (>= 3.46.1~),
+ libsqlite3-dev:native,
+ libsimdutf-dev,
+ libsimdutf-dev:native,
+ libssl-dev (>= 1.1.1~),
+ libssl-dev:native,
+ libutfcpp-dev,
+ libuv1-dev (>= 1.52.0~),
+ libuv1-dev:native,
+ node-acorn (>= 8.16.0~) <!pkg.nodejs.nobuiltin>,
+ node-minimatch (>= 9.0.3-5) <!pkg.nodejs.nobuiltin>,
+ node-undici (>= 5.0.0~) <!pkg.nodejs.nobuiltin>,
+ node-typescript <!nocheck>,
+ openssl (>= 1.1.1~) <!nocheck>,
+ pkgconf,
+ pkg-js-tools (>= 0.8.2~) <!nocheck>,
+ python3:native,
+ python3-jinja2,
+ python3-packaging,
+ procps <!nocheck>,
+ zlib1g-dev,
+ zlib1g-dev:native,
+ libzstd-dev,
+ libzstd-dev:native,
+Build-Depends-Indep:
+ node-js-yaml (>= 4.1.0+dfsg+~4.0.5-6) <!nodoc>,
+ node-marked (>= 4~) <!nodoc>,
+ node-highlight.js <!nodoc>,
+Standards-Version: 4.7.4
+Homepage: https://nodejs.org/
+Vcs-Browser: https://salsa.debian.org/js-team/nodejs/tree/debian/24.x
+Vcs-Git: https://salsa.debian.org/js-team/nodejs.git -b debian/24.x
+
+Package: libnode-dev
+Section: libdevel
+Architecture: amd64 arm64 armel armhf i386 mips64el mips64r6el loong64 powerpc ppc64 ppc64el riscv64 s390x
+Depends: ${misc:Depends},
+ libssl-dev (>= 1.1.1~),
+ libuv1-dev (>= 1.33.0~),
+ libnode137 (= ${binary:Version})
+Breaks: nodejs-dev (<< 10.0.0~dfsg1-3)
+Replaces: libv8-dev,
+ nodejs-dev (<< 10.0.0~dfsg1-3)
+Conflicts: libv8-dev (<= 3.14.5.8-11)
+Provides: libv8-dev
+Description: evented I/O for V8 javascript (development files)
+ Node.js is a platform built on Chrome's JavaScript runtime for easily
+ building fast, scalable network applications. Node.js uses an
+ event-driven, non-blocking I/O model that makes it lightweight and
+ efficient, perfect for data-intensive real-time applications that run
+ across distributed devices.
+ .
+ This package provides development headers for libnode137
+
+Package: nodejs
+Architecture: amd64 arm64 armel armhf i386 mips64el mips64r6el loong64 powerpc ppc64 ppc64el riscv64 s390x
+Multi-Arch: allowed
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ node-corepack <!pkg.nodejs.nobuiltin>,
+ sse2-support [i386],
+ armv6k-support [armel], vfpv2-support [armel],
+ libnode137 (= ${binary:Version})
+Recommends: ca-certificates,
+ nodejs-doc,
+Suggests: npm
+Replaces: nodejs-legacy
+ , libnode72 (<< 13)
+ , libnode83 (<< 16.13.2+really14.19.1~dfsg~)
+Conflicts: nodejs-legacy
+Breaks: node-typescript (<< 5.2~)
+ , node-babel-runtime (<< 7)
+ , node-jest (<< 29~)
+ , node-proxy-agents (<< 0~2025070717~)
+ , libnode72 (<< 13)
+ , libnode83 (<< 16.13.2+really14.19.1~dfsg~)
+Provides: node-types-node (= ${types:Node})
+Description: evented I/O for V8 javascript - runtime executable
+ Node.js is a platform built on Chrome's JavaScript runtime for easily
+ building fast, scalable network applications. Node.js uses an
+ event-driven, non-blocking I/O model that makes it lightweight and
+ efficient, perfect for data-intensive real-time applications that run
+ across distributed devices.
+ .
+ Node.js is bundled with several useful libraries to handle server
+ tasks:
+ .
+ System, Events, Standard I/O, Modules, Timers, Child Processes, POSIX,
+ HTTP, Multipart Parsing, TCP, DNS, Assert, Path, URL, Query Strings.
+
+Package: libnode137
+Section: libs
+Architecture: amd64 arm64 armel armhf i386 mips64el mips64r6el loong64 powerpc ppc64 ppc64el riscv64 s390x
+Multi-Arch: same
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ sse2-support [i386],
+ armv6k-support [armel], vfpv2-support [armel],
+ node-acorn (>= 8.16.0~) <!pkg.nodejs.nobuiltin>,
+ node-minimatch (>= 9.0.3-5) <!pkg.nodejs.nobuiltin>,
+ node-undici (>= 5.0.0~) <!pkg.nodejs.nobuiltin>
+Breaks: node-modern-syslog (<< 1.1.4-2),
+ libnode64 (<< 10.24.1~),
+ libnode72 (<< 13),
+ libnode108 (<< 19),
+ libnode109 (<< 19),
+ libnode115 (<< 21),
+ libnode127 (<< 23),
+Replaces: nodejs-legacy,
+ libnode72,
+ libnode83,
+ libnode93,
+ libnode108,
+ libnode109,
+ libnode115,
+ libnode127,
+Conflicts: nodejs-legacy
+Description: evented I/O for V8 javascript - runtime library
+ Node.js is a platform built on Chrome's JavaScript runtime for easily
+ building fast, scalable network applications. Node.js uses an
+ event-driven, non-blocking I/O model that makes it lightweight and
+ efficient, perfect for data-intensive real-time applications that run
+ across distributed devices.
+ .
+ Node.js is bundled with several useful libraries to handle server
+ tasks:
+ .
+ System, Events, Standard I/O, Modules, Timers, Child Processes, POSIX,
+ HTTP, Multipart Parsing, TCP, DNS, Assert, Path, URL, Query Strings.
+ .
+ This package provides the dynamic library for Node.js.
+
+Package: nodejs-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Recommends: nodejs
+Depends: ${misc:Depends}
+Replaces: nodejs (<< 6.11.2~dfsg-3)
+Conflicts: nodejs (<< 6.11.2~dfsg-3)
+Description: API documentation for Node.js, the javascript platform
+ Node.js is a platform built on Chrome's JavaScript runtime for easily
+ building fast, scalable network applications. Node.js uses an
+ event-driven, non-blocking I/O model that makes it lightweight and
+ efficient, perfect for data-intensive real-time applications that run
+ across distributed devices.
+ .
+ Node.js is bundled with several useful libraries to handle server
+ tasks:
+ .
+ System, Events, Standard I/O, Modules, Timers, Child Processes, POSIX,
+ HTTP, Multipart Parsing, TCP, DNS, Assert, Path, URL, Query Strings.
+ .
+ This package contains API documentation for Node.js.
