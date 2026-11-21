@@ -170,6 +170,10 @@ skipTests += parallel/test-child-process-stdio-overlapped
 # malformed requests with a session error, not the stream error expected
 skipTests += parallel/test-http2-client-unescaped-path
 skipTests += parallel/test-http2-multi-content-length
+# Docker sets net.ipv4.ip_unprivileged_port_start=0, so an unprivileged
+# process in the build container CAN bind port 1. The test guards only on
+# getuid() != 0, which the builder user satisfies, and then asserts EACCES.
+skipTests += parallel/test-net-boundsocket
 # problem with openssl 3.6.4
 skipTests += parallel/test-crypto-authenticated
 # requires corepack

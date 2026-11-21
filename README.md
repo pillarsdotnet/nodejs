@@ -38,9 +38,10 @@ ship a node 24 at least as new as tenacious's.
 
 Unlike the sibling [libuv1](../libuv1) and [vips](../vips) backports, which are
 straight rebuilds, this packaging has a delta against Ubuntu's `1ubuntu1` —
-**two changes in `debian/rules` and one in `debian/control`**. All three exist
-because the same source has to build on an older series. **A rebase must carry
-them forward, not overwrite `debian/` with upstream's packaging.**
+**three changes in `debian/rules` and one in `debian/control`**. All four exist
+because the same source has to build on an older series, or in a container.
+**A rebase must carry them forward, not overwrite `debian/` with upstream's
+packaging.**
 
 ### 1. Two http2 tests skipped
 
@@ -68,7 +69,27 @@ esbuild --platform=node --bundle $(firstword $(wildcard \
 `~ppa1` failed to build without this. Note it is written to work on **both**
 series, so it does not need revisiting when resolute catches up.
 
-### 3. The libbrotli-dev floor relaxed
+### 3. test-net-boundsocket skipped
+
+```make
+# Docker sets net.ipv4.ip_unprivileged_port_start=0, so an unprivileged
+# process in the build container CAN bind port 1.
+skipTests += parallel/test-net-boundsocket
+```
+
+The test asserts that binding `127.0.0.1:1` raises `EACCES`, guarded only by
+`process.getuid() !== 0`. The build runs as the unprivileged `builder` user,
+which satisfies that guard, but Docker sets
+`net.ipv4.ip_unprivileged_port_start=0` in every container, so the bind
+succeeds and the assertion fails. Confirmed by reading the sysctl in an
+`ubuntu:26.04` container, where it is `0`.
+
+This one is **not** about the older series: it failed identically on
+resolute and stonking, and it is why run #4 of 15 November failed on
+24.19.0 as well. It is an artefact of building in a container, so it would
+not reproduce on Launchpad.
+
+### 4. The libbrotli-dev floor relaxed
 
 ```text
 libbrotli-dev (>= 1.2.0-4.1)      upstream
