@@ -134,6 +134,15 @@ sibling backport's first build. `DEB_BUILD_OPTIONS=nocheck` would make a
 timeout go away by not running the tests; that is a different thing from
 fixing it.
 
+`DEB_BUILD_OPTIONS=noautodbgsym` **is** set, which is a different case: it
+skips nothing that proves anything. `libnode137-dbgsym` is about **1.5 GB**
+(Ubuntu's own `.ddeb` for this version is 1532 MB), the registry's proxy
+refuses a body that size with **HTTP 413**, and nothing installs debug
+symbols from this registry. The sibling `libuv1` and `vips` backports do
+publish theirs, which are a few megabytes. If node's are ever wanted, raise
+the proxy's body limit first — dropping the flag on its own just restores
+the 413 at the end of a 40-minute build.
+
 ## Rebasing onto a newer upstream
 
 1. Find the new `.dsc` under
