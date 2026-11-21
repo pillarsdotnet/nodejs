@@ -130,6 +130,8 @@ endif
 
 DEB_DESTDIR = $(CURDIR)/debian/tmp
 
+# Flaky test
+skipTests += parallel/test-perf-hooks-sliding-window-histogram
 # Test will fail when external dependency is upgraded
 skipTests += parallel/test-process-versions
 # Compiled without amaro - no ts support
@@ -168,6 +170,8 @@ skipTests += parallel/test-child-process-stdio-overlapped
 # malformed requests with a session error, not the stream error expected
 skipTests += parallel/test-http2-client-unescaped-path
 skipTests += parallel/test-http2-multi-content-length
+# problem with openssl 3.6.4
+skipTests += parallel/test-crypto-authenticated
 # requires corepack
 skipTests += parallel/test-corepack-yarn-install
 skipTests += parallel/test-corepack-version
@@ -175,6 +179,9 @@ skipTests += parallel/test-corepack-version
 skipTests += test/parallel/test-util-styletext
 skipTests += sequential/test-force-repl
 skipTests += sequential/test-performance
+# fail because of localhost-no-addrconfig.patch
+skipTest += test-tls-psk-client
+skipTest += test-tls-securepair-client
 # hangs https://github.com/nodejs/node/issues/44898
 skipTests += sequential/test-watch-mode
 skipTests += sequential/test-watch-mode-inspect
@@ -233,6 +240,9 @@ flakyTests += parallel/test-tls-ocsp-callback
 # Skip test broken by openssl 4.0
 flakyTests += parallel/test-tls-client-mindhsize
 flakyTests += parallel/test-tls-dhe
+# to be investigated
+flakyTests += parallel/test-uv-errmap
+flakyTests += parallel/test-uv-errno
 
 ifeq ($(DEB_HOST_ARCH), riscv64)
 flakyTests += sequential/test-diagnostic-dir-cpu-prof
@@ -334,10 +344,8 @@ CPPFLAGS += -g
 endif
 
 ifeq ($(DEB_HOST_ARCH),riscv64)
-CC=gcc-14
-CXX=g++-14
-export CC
-export CXX
+CFLAGS += -march=rv64gc
+CXXFLAGS += -march=rv64gc
 endif
 
 

@@ -1,0 +1,20 @@
+Description: riscv64 vector extension makes tests crash
+ Two of the riscv64 buildds (rv-manda-02 and rv-manda-04) recently got
+ their hardware upgraded to a CPU with vector extension ("V"). nodejs, or
+ rather v8, is able to use the corresponding instructions at runtime.
+ Unfortunately support for this extension seems to be broken, causing a
+ few testsuite failures and thus the package to FTBFS
+Author: Aurelien Jarno <aurel32@debian.org>
+Last-Update: 2026-08-19
+Forwarded: no, not-yet
+--- a/deps/v8/src/base/cpu.cc
++++ b/deps/v8/src/base/cpu.cc
+@@ -968,7 +968,7 @@
+   if (!syscall(__NR_riscv_hwprobe, &pairs,
+                sizeof(pairs) / sizeof(riscv_hwprobe), 0, nullptr, 0)) {
+     if (pairs[0].value & RISCV_HWPROBE_IMA_V) {
+-      has_rvv_ = true;
++      // has_rvv_ = true;
+     }
+     if (pairs[0].value & RISCV_HWPROBE_IMA_FD) {
+       has_fpu_ = true;

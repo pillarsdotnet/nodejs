@@ -5,7 +5,7 @@ Last-Update: 2026-06-06
 Forwarded: no, let us see how it goes first
 --- a/configure.py
 +++ b/configure.py
-@@ -1121,6 +1121,12 @@
+@@ -1094,6 +1094,12 @@
      help='Enable V8 transparent hugepage support. This feature is only '+
           'available on Linux platform.')
  

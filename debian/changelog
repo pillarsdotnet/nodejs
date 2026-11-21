@@ -1,25 +1,91 @@
-nodejs (24.19.0+dfsg+~cs24.13.3-1ubuntu1~ubuntu26.04~ppa3) resolute; urgency=medium
+nodejs (24.22.2+dfsg+~cs24.19.2-1ubuntu1) tenacious; urgency=low
 
-  * Skip test-http2-client-unescaped-path and test-http2-multi-content-length:
-    resolute's libnghttp2 1.68.0-2ubuntu0.2 (CVE-2026-58055) closes the
-    session on these malformed requests where the tests expect a stream
-    error, so ~ppa2 failed to build.
+  * Merge from Debian unstable. Remaining changes:
+    - Fix riscv64 build by using -march=rv64gc
+    - Ignore 2 tls tests, failing with openssl 4.0
 
- -- Robert August Vincent II (Bob) <pillarsdotnet@gmail.com>  Sat, 03 Oct 2026 01:10:36 -0400
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 30 Oct 2026 21:24:09 +0100
 
-nodejs (24.19.0+dfsg+~cs24.13.3-1ubuntu1~ubuntu26.04~ppa2) resolute; urgency=medium
+nodejs (24.22.2+dfsg+~cs24.19.2-1) unstable; urgency=medium
 
-  * Bundle node-minimatch from dist/cjs/index.js when index.cjs is
-    absent: resolute's node-minimatch 9.0.3 has no index.cjs, so ~ppa1
-    failed to build.
+  * New upstream version 24.22.2+dfsg+~cs24.19.2
+  * riscv64: add missing v8 patch. Closes: #1151837.
+    Thanks to Aurelien Jarno.
 
- -- Robert August Vincent II (Bob) <pillarsdotnet@gmail.com>  Fri, 02 Oct 2026 23:48:02 -0400
+ -- Jérémy Lal <kapouer@melix.org>  Wed, 28 Oct 2026 20:57:23 +0100
 
-nodejs (24.19.0+dfsg+~cs24.13.3-1ubuntu1~ubuntu26.04~ppa1) resolute; urgency=medium
+nodejs (24.22.1+dfsg+~cs24.19.2-1) unstable; urgency=medium
 
-  * No-change backport from Ubuntu 26.10 (stonking).
+  * New upstream version 24.22.1+dfsg+~cs24.19.2.
+    + CVE-2026-105481 http: ensure agent data guard works without I/O
+    + CVE-2026-105482 dns: validate resolve inputs for null bytes
+    + CVE-2026-105483 tls: fix ip normalization regression
+    + CVE-2026-106069 tls: reject non-canonical IP addresses
+    + CVE-2026-106072 tls: fix certificate validation for non-canonical IPv4 hostnames
+      Upstream forgot to list it in changelog, see
+      https://github.com/nodejs/node/pull/66984
+    + CVE-2026-106073 permission: check permission model in realpathSync
+    + CVE-2026-106074 crypto: reset random caches across snapshots
+    + CVE-2026-111497 src: expose `BROTLI_DECODER_ERROR_FORMAT_BLOCK_SWITCH`
+  * B-D brotli 1.2.0-4.1 because of CVE-2026-111497 change.
 
- -- Robert August Vincent II (Bob) <pillarsdotnet@gmail.com>  Fri, 02 Oct 2026 21:57:10 -0400
+ -- Jérémy Lal <kapouer@melix.org>  Tue, 27 Oct 2026 01:28:41 +0100
+
+nodejs (24.22.0+dfsg+~cs24.19.2-2) unstable; urgency=medium
+
+  * Bump libuv1-dev requirement >= 1.53.0
+
+ -- Jérémy Lal <kapouer@melix.org>  Tue, 20 Oct 2026 11:37:07 +0200
+
+nodejs (24.22.0+dfsg+~cs24.19.2-1) unstable; urgency=medium
+
+  * New upstream version 24.22.0+dfsg+~cs24.19.2
+  * Drop patch applied upstream
+  * Skip failing test-perf-hooks-sliding-window-histogram
+
+ -- Jérémy Lal <kapouer@melix.org>  Sat, 17 Oct 2026 18:00:03 +0200
+
+nodejs (24.21.0+dfsg+~cs24.13.4-1ubuntu2) stonking; urgency=low
+
+  * Merge from Debian unstable. Remaining changes:
+    - Fix riscv64 build by using -march=rv64gc
+    - Ignore 2 tls tests, failing with openssl 4.0
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Mon, 28 Sep 2026 16:14:20 +0200
+
+nodejs (24.21.0+dfsg+~cs24.13.4-1) unstable; urgency=medium
+
+  * New upstream version 24.21.0+dfsg+~cs24.13.4
+
+ -- Jérémy Lal <kapouer@melix.org>  Wed, 16 Sep 2026 01:31:39 +0200
+
+nodejs (24.20.0+dfsg+~cs24.13.3-2) unstable; urgency=medium
+
+  * Fix: skip parallel/test-crypto-authenticated
+
+ -- Jérémy Lal <kapouer@melix.org>  Tue, 01 Sep 2026 10:22:57 +0200
+
+nodejs (24.20.0+dfsg+~cs24.13.3-1) unstable; urgency=medium
+
+  * New upstream version 24.20.0+dfsg+~cs24.13.3
+  * Skip parallel/test-crypto-authenticated. Closes: #1133576.
+    This is the usual regression caused by openssl change of behavior.
+  * patch: move skipped tests to d/rules
+  * patch: disable riscv64 vector extension support.
+    Closes: #1144759.
+  * patch: make node reproducible again
+    Closes: #1144052.
+
+  [Bastien Roucariès]
+  * Drop support for sse2-support. Baseline now.
+
+ -- Jérémy Lal <kapouer@melix.org>  Tue, 01 Sep 2026 00:19:29 +0200
+
+nodejs (24.19.0+dfsg+~cs24.13.3-1ubuntu2) stonking; urgency=medium
+
+  * Try to export -march=rv64gc instead of using gcc-14
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 26 Aug 2026 15:02:56 +0200
 
 nodejs (24.19.0+dfsg+~cs24.13.3-1ubuntu1) stonking; urgency=medium
 

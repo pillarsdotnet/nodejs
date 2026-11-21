@@ -19,3 +19,5 @@ build/shared_simdutf.patch
 build/32-bit.patch
 build/private-mapping-fork.patch
 build/test-tsc-5-6.patch
+build/riscv-disable-rvv.patch
+deps/v8-riscv-valid-dispatch-handle.patch

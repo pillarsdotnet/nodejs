@@ -5,7 +5,7 @@ Last-Update: 2026-08-04
 
 --- a/tools/v8_gypfiles/v8.gyp
 +++ b/tools/v8_gypfiles/v8.gyp
-@@ -2420,16 +2420,17 @@
+@@ -2423,16 +2423,17 @@
      },  # highway
      {
        'target_name': 'simdutf',
