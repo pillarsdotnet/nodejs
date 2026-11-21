@@ -15,7 +15,17 @@ Build-Depends:
  jq,
  libada-url-dev,
  libada-url-dev:native,
- libbrotli-dev (>= 1.2.0-4.1),
+# Relaxed from upstream's (>= 1.2.0-4.1). That floor is Debian's way of
+# saying "must carry the fix for CVE-2026-111497", which 1.2.0-4.1 was a
+# non-maintainer upload for. Ubuntu shipped the same patch in its own
+# security updates instead -- 1.2.0-3ubuntu0.1 for resolute and
+# 1.2.0-4ubuntu0.1 for stonking, both carrying debian/patches/
+# CVE-2026-111497.patch -- and both sort BELOW 4.1, because a letter sorts
+# before a dot in a dpkg version. So the literal floor is unsatisfiable on
+# either target series while the fix is present on both. Verified in an
+# ubuntu:26.10 container: the candidate is 1.2.0-4ubuntu0.1 from
+# stonking-updates and stonking-security.
+ libbrotli-dev (>= 1.2.0-3ubuntu0.1),
  libbrotli-dev:native,
  libc-ares-dev (>= 1.18.1~),
  libc-ares-dev:native,

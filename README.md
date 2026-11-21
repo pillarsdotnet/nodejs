@@ -38,9 +38,9 @@ ship a node 24 at least as new as tenacious's.
 
 Unlike the sibling [libuv1](../libuv1) and [vips](../vips) backports, which are
 straight rebuilds, this packaging has a delta against Ubuntu's `1ubuntu1` —
-**two changes in `debian/rules`**. Both exist because the same source has to
-build on an older series. **A rebase must carry them forward, not overwrite
-`debian/` with upstream's packaging.**
+**two changes in `debian/rules` and one in `debian/control`**. All three exist
+because the same source has to build on an older series. **A rebase must carry
+them forward, not overwrite `debian/` with upstream's packaging.**
 
 ### 1. Two http2 tests skipped
 
@@ -67,6 +67,33 @@ esbuild --platform=node --bundle $(firstword $(wildcard \
 
 `~ppa1` failed to build without this. Note it is written to work on **both**
 series, so it does not need revisiting when resolute catches up.
+
+### 3. The libbrotli-dev floor relaxed
+
+```text
+libbrotli-dev (>= 1.2.0-4.1)      upstream
+libbrotli-dev (>= 1.2.0-3ubuntu0.1)   here
+```
+
+That floor is Debian saying "must carry the fix for CVE-2026-111497", which
+`1.2.0-4.1` was a non-maintainer upload for. Ubuntu shipped the identical
+`debian/patches/CVE-2026-111497.patch` through its own security pockets
+instead — `1.2.0-3ubuntu0.1` on resolute, `1.2.0-4ubuntu0.1` on stonking —
+and **both sort below `4.1`**, because a letter sorts before a dot in a dpkg
+version. So the literal floor is unsatisfiable on either target series while
+the fix is present on both, and the first build of 24.22.2 died on it with
+nothing more informative than `mk-build-deps: Unable to install all build-dep
+packages`.
+
+This is a relaxation of a *security* floor, so it is only safe while that
+stays true. Before touching it, check both series again:
+
+```sh
+docker run --rm ubuntu:26.10 sh -c 'apt-get update -qq; apt-cache policy libbrotli-dev'
+```
+
+If a series ever lacks the CVE fix, raise the floor back and backport brotli
+rather than building against a vulnerable library.
 
 ## What this repository contains
 
