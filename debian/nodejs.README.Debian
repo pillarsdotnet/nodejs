@@ -26,4 +26,3 @@ There is no global lookup with ESM.
 
 One can easily symlink globally-installed modules into a local package using
 "pkgjs-install-minimal" from the dh-nodejs debian package.
-

@@ -1,24 +1,24 @@
-# nodejs — backport packaging
+# `nodejs` — `backport` packaging
 
-Ubuntu tenacious's **nodejs 24.22.2** rebuilt for **resolute (26.04)** and
-**stonking (26.10)**, and published to the Forgejo Debian registry.
+Ubuntu `tenacious`'s **`nodejs` 24.22.2** rebuilt for **resolute (26.04)** and
+**`stonking` (26.10)**, and published to the `Forgejo` Debian registry.
 
 ## Why the source comes from the development series
 
-It used to come from stonking, and resolute was the only target: resolute
-ships 22.22.1 and stonking shipped the version being backported, so building
+It used to come from `stonking`, and resolute was the only target: resolute
+ships 22.22.1 and `stonking` shipped the version being backported, so building
 it there would only have shadowed the archive.
 
 Stonking is still on **24.19.0**, and Node **24.22.1** and **24.22.3** were
 security releases. Nothing newer than 24.19.0 exists in any released Ubuntu
-suite, so following stonking means staying two security releases behind.
+suite, so following `stonking` means staying two security releases behind.
 Tenacious (27.04, the development series) carries
 `24.22.2+dfsg+~cs24.19.2-1ubuntu1`, which picks up 24.22.1 but not 24.22.3 --
 better, not current.
 
-Taking it means **stonking is a target too**. Leaving it out would publish a
-newer node for resolute than stonking has, and a host upgrading
-resolute → stonking would move backwards. Checked with
+Taking it means **`stonking` is a target too**. Leaving it out would publish a
+newer node for resolute than `stonking` has, and a host upgrading
+resolute → `stonking` would move backwards. Checked with
 `dpkg --compare-versions`:
 
 ```text
@@ -29,14 +29,14 @@ resolute → stonking would move backwards. Checked with
 
 The last of those is the point of the `~`: if a released suite ever ships
 `24.22.2+dfsg+~cs24.19.2-1ubuntu1` itself, the archive wins and this
-backport steps aside.
+`backport` steps aside.
 
 Retire this repository, rather than rebasing it, once both target series
-ship a node 24 at least as new as tenacious's.
+ship a node 24 at least as new as `tenacious`'s.
 
 ## This one carries real patches
 
-Unlike the sibling [libuv1](../libuv1) and [vips](../vips) backports, which are
+Unlike the sibling [`libuv1`](../libuv1) and [`vips`](../vips) backports, which are
 straight rebuilds, this packaging has a delta against Ubuntu's `1ubuntu1` —
 **three changes in `debian/rules` and one in `debian/control`**. All four exist
 because the same source has to build on an older series, or in a container.
@@ -52,11 +52,11 @@ skipTests += parallel/test-http2-client-unescaped-path
 skipTests += parallel/test-http2-multi-content-length
 ```
 
-Resolute's libnghttp2 carries a CVE fix that closes the session on these
+`Resolute`'s libnghttp2 carries a CVE fix that closes the session on these
 malformed requests, where the tests expect a stream error. `~ppa2` failed to
 build without this.
 
-### 2. minimatch bundled from whichever entry point exists
+### 2. `minimatch` bundled from whichever entry point exists
 
 ```make
 # node-minimatch 9.0.7 (26.10) ships index.cjs; 9.0.3 (26.04) has only
@@ -81,11 +81,11 @@ The test asserts that binding `127.0.0.1:1` raises `EACCES`, guarded only by
 `process.getuid() !== 0`. The build runs as the unprivileged `builder` user,
 which satisfies that guard, but Docker sets
 `net.ipv4.ip_unprivileged_port_start=0` in every container, so the bind
-succeeds and the assertion fails. Confirmed by reading the sysctl in an
+succeeds and the assertion fails. Confirmed by reading the `sysctl` in an
 `ubuntu:26.04` container, where it is `0`.
 
 This one is **not** about the older series: it failed identically on
-resolute and stonking, and it is why run #4 of 15 November failed on
+resolute and `stonking`, and it is why run #4 of 15 November failed on
 24.19.0 as well. It is an artefact of building in a container, so it would
 not reproduce on Launchpad.
 
@@ -99,28 +99,28 @@ libbrotli-dev (>= 1.2.0-3ubuntu0.1)   here
 That floor is Debian saying "must carry the fix for CVE-2026-111497", which
 `1.2.0-4.1` was a non-maintainer upload for. Ubuntu shipped the identical
 `debian/patches/CVE-2026-111497.patch` through its own security pockets
-instead — `1.2.0-3ubuntu0.1` on resolute, `1.2.0-4ubuntu0.1` on stonking —
-and **both sort below `4.1`**, because a letter sorts before a dot in a dpkg
+instead — `1.2.0-3ubuntu0.1` on resolute, `1.2.0-4ubuntu0.1` on `stonking` —
+and **both sort below `4.1`**, because a letter sorts before a dot in a `dpkg`
 version. So the literal floor is unsatisfiable on either target series while
 the fix is present on both, and the first build of 24.22.2 died on it with
 nothing more informative than `mk-build-deps: Unable to install all build-dep
 packages`.
 
-This is a relaxation of a *security* floor, so it is only safe while that
+This is a relaxation of a _security_ floor, so it is only safe while that
 stays true. Before touching it, check both series again:
 
 ```sh
 docker run --rm ubuntu:26.10 sh -c 'apt-get update -qq; apt-cache policy libbrotli-dev'
 ```
 
-If a series ever lacks the CVE fix, raise the floor back and backport brotli
+If a series ever lacks the CVE fix, raise the floor back and `backport` `brotli`
 rather than building against a vulnerable library.
 
 ## What this repository contains
 
 Only `debian/`. The upstream source is fetched at build time from the `.dsc` in
 `.forgejo/upstream.conf` and verified by `dpkg-source` against that file's own
-SHA-256 sums. Unpacked, the nodejs source is **252 MB**, so committing it was
+SHA-256 sums. Unpacked, the `nodejs` source is **252 MB**, so committing it was
 never an option.
 
 ## The build is long, and runs unprivileged
@@ -129,8 +129,8 @@ Node's test suite is substantial and this job has no compiler cache. Treat a
 timeout as a fact about the package rather than a fault in the pipeline.
 
 `dpkg-buildpackage` runs as an unprivileged `builder` user: containers are root
-by default and test suites object — libuv's refuses outright, which failed the
-sibling backport's first build. `DEB_BUILD_OPTIONS=nocheck` would make a
+by default and test suites object — `libuv`'s refuses outright, which failed the
+sibling `backport`'s first build. `DEB_BUILD_OPTIONS=nocheck` would make a
 timeout go away by not running the tests; that is a different thing from
 fixing it.
 
@@ -152,7 +152,7 @@ the 413 at the end of a 40-minute build.
    patches above onto the new version. Do not copy upstream's `debian/`
    wholesale — that is right for the patch-free backports, and wrong here.
 4. Check whether the target series have caught up. The source suite is
-   whichever one has the newest nodejs 24; `BACKPORT_RELEASES` in
+   whichever one has the newest `nodejs` 24; `BACKPORT_RELEASES` in
    `.forgejo/upstream.conf` and the matrix in
    `.forgejo/workflows/registry.yml` must agree, and must not leave a newer
    series building nothing while an older one gets a newer node.

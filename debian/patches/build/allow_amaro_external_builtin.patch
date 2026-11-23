@@ -27,5 +27,5 @@ Author: Jérémy Lal <kapouer@melix.org>
 +		throw new ERR_NO_TYPESCRIPT();
 +	}
  });
- 
+
  /**

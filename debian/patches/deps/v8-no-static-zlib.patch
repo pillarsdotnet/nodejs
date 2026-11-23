@@ -6,12 +6,12 @@ Forwarded: https://github.com/nodejs/node/issues/33848
 --- a/tools/v8_gypfiles/features.gypi
 +++ b/tools/v8_gypfiles/features.gypi
 @@ -297,7 +297,7 @@
- 
+
      # Compile V8 using zlib as dependency.
      # Sets -DV8_USE_ZLIB
 -    'v8_use_zlib%': 1,
 +    'v8_use_zlib%': 0,
- 
+
      # Enable Sparkplug
      # Sets -DV8_ENABLE_SPARKPLUG.
 --- a/tools/v8_gypfiles/v8.gyp

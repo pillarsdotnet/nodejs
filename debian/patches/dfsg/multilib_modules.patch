@@ -12,13 +12,13 @@ Last-Update: 2020-03-04
    const homeDir = isWindows ? process.env.USERPROFILE : safeGetenv('HOME');
    const nodePath = isWindows ? process.env.NODE_PATH : safeGetenv('NODE_PATH');
 +  const relativePaths = process.config?.variables?.node_relative_path;
- 
+
    // process.execPath is $PREFIX/bin/node except on Windows where it is
    // $PREFIX\node.exe where $PREFIX is the root of the Node.js installation.
 @@ -2176,7 +2177,18 @@
      path.resolve(process.execPath, '..') :
      path.resolve(process.execPath, '..', '..');
- 
+
 -  const paths = [path.resolve(prefixDir, 'lib', 'node')];
 +  const postDirs = [];
 +  if (relativePaths) {
@@ -32,7 +32,7 @@ Last-Update: 2020-03-04
 +  const paths = postDirs.map(postDir => {
 +    return path.resolve(prefixDir, postDir);
 +  });
- 
+
    if (homeDir) {
      ArrayPrototypeUnshift(paths, path.resolve(homeDir, '.node_libraries'));
 --- a/configure.py
@@ -40,7 +40,7 @@ Last-Update: 2020-03-04
 @@ -96,6 +96,12 @@
      default=None,
      help='Build node with code coverage enabled')
- 
+
 +parser.add_argument('--arch-triplet',
 +    action='store',
 +    dest='arch_triplet',
@@ -53,7 +53,7 @@ Last-Update: 2020-03-04
 @@ -173,6 +179,13 @@
      default=None,
      help='add gdb support')
- 
+
 +parser.add_argument('--node-relative-path',
 +    action='store',
 +    dest='node_relative_path',
@@ -67,7 +67,7 @@ Last-Update: 2020-03-04
 @@ -1896,6 +1909,17 @@
    version = getnapibuildversion.get_napi_version()
    output['variables']['napi_build_version'] = version
- 
+
 +def configure_debian(output):
 +  if options.arch_triplet:
 +    output['variables']['arch_triplet'] = options.arch_triplet
@@ -95,7 +95,7 @@ Last-Update: 2020-03-04
 @@ -71,12 +71,12 @@
    env.HOME = env.USERPROFILE = bothHomeDir;
    runTest('$HOME/.node_modules', env);
- 
+
 -  // Test module in $PREFIX/lib/node.
 -  // Write module into $PREFIX/lib/node.
 -  const expectedString = '$PREFIX/lib/node';

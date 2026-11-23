@@ -7,7 +7,7 @@ Forwarded: https://github.com/nodejs/node/issues/42945
 --- a/test/parallel/test-buffer-writefloat.js
 +++ b/test/parallel/test-buffer-writefloat.js
 @@ -53,6 +53,7 @@
- 
+
  // JS only knows a single NaN but there exist two platform specific
  // implementations. Therefore, allow both quiet and signalling NaNs.
 +/*
@@ -19,6 +19,6 @@ Forwarded: https://github.com/nodejs/node/issues/42945
        [ 0x7F, 0xC0, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x7F ])));
  }
 +*/
- 
+
  assert.ok(Number.isNaN(buffer.readFloatBE(0)));
  assert.ok(Number.isNaN(buffer.readFloatLE(4)));

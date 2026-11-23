@@ -15,7 +15,7 @@ Bootstrap a new arch: two-staged build
  2. They are not available in the archive.
     They must be built using a first stage build of nodejs:
     Build nodejs once, build modules, install modules and nodejs, rebuild nodejs.
- 
+
  In both cases, one must build nodejs twice using:
 
  - First using build profiles:

@@ -15,4 +15,3 @@ Forwarded: https://github.com/nodejs/node/issues/63427
 +        target: 'es5'
        }
      });
- 

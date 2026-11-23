@@ -6,7 +6,7 @@ Author: Jérémy Lal <kapouer@melix.org>
 --- a/configure.py
 +++ b/configure.py
 @@ -59,6 +59,9 @@
- 
+
  # builtins may be removed later if they have been disabled by options
  shareable_builtins = {'undici/undici': 'deps/undici/undici.js',
 +                     'acorn': 'deps/acorn/acorn/dist/acorn.js',
@@ -14,13 +14,13 @@ Author: Jérémy Lal <kapouer@melix.org>
 +                     'minimatch': 'deps/minimatch/index.js',
                       'amaro/dist/index': 'deps/amaro/dist/index.js'
  }
- 
+
 --- a/src/node_builtins.cc
 +++ b/src/node_builtins.cc
 @@ -52,6 +52,24 @@
                           STRINGIFY(NODE_SHARED_BUILTIN_UNDICI_UNDICI_PATH));
  #endif  // NODE_SHARED_BUILTIN_UNDICI_UNDICI_PATH
- 
+
 +#ifdef NODE_SHARED_BUILTIN_ACORN_PATH
 +  AddExternalizedBuiltin(
 +    "internal/deps/acorn/acorn/dist/acorn",

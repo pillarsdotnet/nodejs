@@ -7,7 +7,7 @@ Forwarded: https://github.com/nodejs/node/issues/41163
 @@ -167,29 +167,9 @@
  #define ENABLE_CONTROL_FLOW_INTEGRITY_BOOL false
  #endif
- 
+
 -#if V8_TARGET_ARCH_ARM
 -// Set stack limit lower for ARM than for other architectures because stack
 -// allocating MacroAssembler takes 120K bytes.  See issue crbug.com/405338
@@ -31,6 +31,6 @@ Forwarded: https://github.com/nodejs/node/issues/41163
  // the main execution thread is 1MB.
  #define V8_DEFAULT_STACK_SIZE_KB 984
 -#endif
- 
+
  // Helper macros to enable handling of direct C calls in the simulator.
  #if defined(USE_SIMULATOR) &&                                           \

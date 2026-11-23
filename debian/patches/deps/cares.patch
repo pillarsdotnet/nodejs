@@ -7,7 +7,7 @@ Author: Jérémy Lal <kapouer@melix.org>
 @@ -23,7 +23,15 @@
  # include <netdb.h>
  #endif  // __POSIX__
- 
+
 -# include <ares_nameser.h>
 +#if defined(__ANDROID__) || \
 +    defined(__MINGW32__) || \
@@ -18,6 +18,6 @@ Author: Jérémy Lal <kapouer@melix.org>
 +# include <arpa/nameser.h>
 +#endif
 +
- 
+
  namespace node {
  namespace cares_wrap {

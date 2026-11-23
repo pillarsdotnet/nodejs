@@ -11424,7 +11424,7 @@ Files: deps/v8/third_party/jinja2/_identifier.py
  test/wasi/wasm/symlink_loop.wasm
  tools/inspector_protocol/jinja2/_identifier.py
  tools/msvs/msi/i18n/zh-cn.wxl
-Copyright: 
+Copyright:
 License: UNKNOWN
  FIXME
 
@@ -12665,7 +12665,7 @@ License: NTP
  FIXME
 
 Files: deps/openssl/openssl/ssl/ssl_locl.h
-Copyright: 
+Copyright:
 License: OpenSSL
  FIXME
 
@@ -13256,4 +13256,3 @@ Files: deps/v8/src/base/functional.cc
 Copyright: 2014, the V8 project authors.
 License: public-domain
  FIXME
-

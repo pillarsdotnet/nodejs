@@ -9,4 +9,3 @@ source-is-missing [test/fixtures/*.js]
 source-is-missing [test/fixtures/*.xhtml]
 source-is-missing [test/fixtures/*.html]
 source-is-missing [test/parallel/test-snapshot-umd.js]
-

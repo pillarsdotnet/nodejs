@@ -18,4 +18,3 @@ Ctype: nodejs
 Dist: @types/node
 Matching-Pattern: https://registry.npmjs.org/@types/node/-/node-(24\.\d+\.\d+)@ARCHIVE_EXT@
 Version-Schema: checksum
-

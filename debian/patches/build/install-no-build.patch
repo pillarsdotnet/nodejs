@@ -7,10 +7,10 @@ Forwarded: not-needed
 +++ b/Makefile
 @@ -196,7 +196,7 @@
  	fi
- 
+
  .PHONY: install
 -install: all ## Install node into $PREFIX (default=/usr/local).
 +install: ## Install node into $PREFIX (default=/usr/local).
  	$(PYTHON) tools/install.py $@ --dest-dir '$(DESTDIR)' --prefix '$(PREFIX)'
- 
+
  .PHONY: uninstall

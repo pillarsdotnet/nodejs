@@ -16,7 +16,7 @@ Forwarded: not-needed
 --- a/deps/v8/src/codegen/riscv/macro-assembler-riscv.cc
 +++ b/deps/v8/src/codegen/riscv/macro-assembler-riscv.cc
 @@ -182,8 +182,9 @@
- 
+
  void MacroAssembler::GenerateTailCallToReturnedCode(
      Runtime::FunctionId function_id) {
 +  ASM_CODE_COMMENT(this);
@@ -45,7 +45,7 @@ Forwarded: not-needed
 -         kJavaScriptCallArgCountRegister);
 +    // Function is also the parameter to the runtime call.
 +    Push(kJavaScriptCallTargetRegister);
- 
+
      CallRuntime(function_id, 1);
 -    // Use the return value before restoring a0
      LoadCodeInstructionStart(a2, a0, kJSEntrypointTag);
@@ -64,4 +64,3 @@ Forwarded: not-needed
 +        kJavaScriptCallArgCountRegister);
      SmiUntag(kJavaScriptCallArgCountRegister);
    }
- 

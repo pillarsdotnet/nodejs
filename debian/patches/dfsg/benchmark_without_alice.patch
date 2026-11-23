@@ -7,24 +7,24 @@ Last-Update: 2020-03-04
 --- a/benchmark/buffers/buffer-indexof-number.js
 +++ b/benchmark/buffers/buffer-indexof-number.js
 @@ -10,7 +10,7 @@
- 
+
  function main({ n, value }) {
    const aliceBuffer = fs.readFileSync(
 -    path.resolve(__dirname, '../fixtures/alice.html'),
 +    path.resolve(__dirname, '../../doc/api/all.html'),
    );
- 
+
    let count = 0;
 --- a/benchmark/buffers/buffer-indexof.js
 +++ b/benchmark/buffers/buffer-indexof.js
 @@ -31,7 +31,7 @@
- 
+
  function main({ n, search, encoding, type }) {
    let aliceBuffer = fs.readFileSync(
 -    path.resolve(__dirname, '../fixtures/alice.html'),
 +    path.resolve(__dirname, '../../doc/api/all.html'),
    );
- 
+
    if (encoding === 'undefined') {
 --- a/benchmark/http2/compat.js
 +++ b/benchmark/http2/compat.js
@@ -34,7 +34,7 @@ Last-Update: 2020-03-04
  const fs = require('fs');
 -const file = path.join(path.resolve(__dirname, '../fixtures'), 'alice.html');
 +const file = path.join(path.resolve(__dirname, '../../doc/api'), 'all.html');
- 
+
  const bench = common.createBenchmark(main, {
    requests: [100, 1000, 5000],
 --- a/benchmark/http2/respond-with-fd.js
@@ -42,10 +42,10 @@ Last-Update: 2020-03-04
 @@ -4,7 +4,7 @@
  const path = require('path');
  const fs = require('fs');
- 
+
 -const file = path.join(path.resolve(__dirname, '../fixtures'), 'alice.html');
 +const file = path.join(path.resolve(__dirname, '../../doc/api'), 'all.html');
- 
+
  const bench = common.createBenchmark(main, {
    requests: [100, 1000, 5000],
 --- a/benchmark/http2/simple.js
@@ -56,6 +56,6 @@ Last-Update: 2020-03-04
  const fs = require('fs');
 -const file = path.join(path.resolve(__dirname, '../fixtures'), 'alice.html');
 +const file = path.join(path.resolve(__dirname, '../../doc/api'), 'all.html');
- 
+
  const bench = common.createBenchmark(main, {
    requests: [100, 1000, 5000],

@@ -1,7 +1,7 @@
 Description: adapt tools/test.py
  * log to stdout
  * increase timeout multipliers
- * rename --flaky-tests to --flaky-tests-mode and use --flaky-tests like --skip-tests 
+ * rename --flaky-tests to --flaky-tests-mode and use --flaky-tests like --skip-tests
 Author: Jérémy Lal <kapouer@melix.org>
 Forwarded: not-needed
 Reviewed-By: Xavier Guimard <yadd@debian.org>
@@ -16,7 +16,7 @@ Last-Update: 2025-02-12
 -		--mode=$(BUILDTYPE_LOWER) --flaky-tests=$(FLAKY_TESTS) \
 +		--mode=$(BUILDTYPE_LOWER) --flaky-tests-mode=$(FLAKY_TESTS) \
  		$(TEST_CI_ARGS) $(CI_NATIVE_SUITES)
- 
+
  .PHONY: test-ci-js
 @@ -594,7 +594,7 @@
  # Related CI job: node-test-commit-arm-fanned
@@ -75,10 +75,10 @@ Last-Update: 2025-02-12
 +    print("Unknown tests mode %s" % options.flaky_tests_mode)
      return False
    return True
- 
+
 @@ -1797,11 +1801,13 @@
          sys.exit(1)
- 
+
    def should_keep(case):
 +    if any((s in case.file) for s in options.flaky_tests):
 +      case.outcomes.add(FLAKY)
@@ -105,11 +105,10 @@ Last-Update: 2025-02-12
 @@ -290,6 +290,10 @@
    const multipliers = typeof ms === 'bigint' ?
      { two: 2n, four: 4n, seven: 7n } : { two: 2, four: 4, seven: 7 };
- 
+
 +  if (process.env.TEST_CI_TIMEOUT_MULTIPLIER) {
 +    ms = typeof ms == "bigint" ? BigInt(process.env.TEST_CI_TIMEOUT_MULTIPLIER) * ms : parseInt(process.env.TEST_CI_TIMEOUT_MULTIPLIER) * ms;
 +  }
 +
    if (isDebug)
      ms = multipliers.two * ms;
- 

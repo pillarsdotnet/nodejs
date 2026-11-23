@@ -633,4 +633,3 @@ function newSection({ text }) {
   }
   return { textRaw: text, name: text };
 }
-

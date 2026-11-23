@@ -17,7 +17,7 @@ Forwarded: https://github.com/nodejs/node/issues/33816
 @@ -1806,13 +1807,6 @@
      hints: options.hints || 0,
    };
- 
+
 -  if (!isWindows &&
 -      dnsopts.family !== 4 &&
 -      dnsopts.family !== 6 &&

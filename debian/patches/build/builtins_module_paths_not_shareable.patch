@@ -20,5 +20,5 @@ Forwarded: no, todo
 +
 +#endif  // NOT NODE_BUILTIN_MODULES_PATH
  }
- 
+
  std::ranges::keys_view<std::ranges::ref_view<const BuiltinSourceMap>>

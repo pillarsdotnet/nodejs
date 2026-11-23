@@ -6,16 +6,16 @@ Author: Jérémy Lal <kapouer@melix.org>
 +++ b/test/parallel/test-process-versions.js
 @@ -3,7 +3,7 @@
  const assert = require('assert');
- 
+
  // Import of pure js (non-shared) deps for comparison
 -const acorn = require('../../deps/acorn/acorn/package.json');
 +const acorn = require('/usr/share/nodejs/acorn/package.json');
- 
+
  const expected_keys = [
    'ares',
 @@ -112,7 +112,7 @@
                     process.versions.napi);
- 
+
  if (hasUndici) {
 -  const undici = require('../../deps/undici/src/package.json');
 +  const undici = require('/usr/share/nodejs/undici/package.json');
@@ -26,7 +26,7 @@ Author: Jérémy Lal <kapouer@melix.org>
 +++ b/test/parallel/test-inspector-network-fetch.js
 @@ -13,7 +13,7 @@
  const inspector = require('node:inspector/promises');
- 
+
  // Disable certificate validation for the global fetch.
 -const undici = require('internal/deps/undici/undici');
 +const undici = require('/usr/share/nodejs/undici');

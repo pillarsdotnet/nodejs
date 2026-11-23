@@ -35,7 +35,7 @@ Last-Update: 2026-08-04
  #include "src/strings/unicode-decoder.h"
 -#include "third_party/simdutf/simdutf.h"
 +#include <simdutf.h>
- 
+
  // Has to be the last include (doesn't have include guards):
  #include "src/objects/object-macros.h"
 --- a/deps/v8/src/builtins/builtins-typed-array.cc
@@ -46,17 +46,16 @@ Last-Update: 2026-08-04
  #include "src/objects/simd.h"
 -#include "third_party/simdutf/simdutf.h"
 +#include <simdutf.h>
- 
+
  namespace v8 {
  namespace internal {
 --- a/deps/v8/src/strings/unicode-inl.h
 +++ b/deps/v8/src/strings/unicode-inl.h
 @@ -10,7 +10,7 @@
- 
+
  #include "src/base/logging.h"
  #include "src/utils/utils.h"
 -#include "third_party/simdutf/simdutf.h"
 +#include <simdutf.h>
- 
+
  namespace unibrow {
- 

@@ -8,7 +8,7 @@ Forwarded: no, let us see how it goes first
 @@ -1094,6 +1094,12 @@
      help='Enable V8 transparent hugepage support. This feature is only '+
           'available on Linux platform.')
- 
+
 +parser.add_argument('--v8-enable-private-mapping-fork-optimization',
 +    action='store_true',
 +    dest='v8_enable_private_mapping_fork_optimization',
@@ -16,5 +16,5 @@ Forwarded: no, let us see how it goes first
 +    help='Enable V8 Private mapping fork optimization')
 +
  maglev_enabled_by_default_help = f"(Maglev is enabled by default on {','.join(maglev_enabled_architectures)})"
- 
+
  parser.add_argument('--v8-disable-maglev',
